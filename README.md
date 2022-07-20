@@ -6,6 +6,8 @@ Données de 2020 publiées le 13 Juillet 2022.
 
 Le résultat est dispo dans [./data.json](./data.json)
 
+Une démo d'usage est dispo sur https://socialgouv.github.io/dares-stats-branches
+
 ```js
 interface ConventionCollective {
   idcc: string;

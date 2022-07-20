@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync } from "fs";
 import { read, utils } from "xlsx/xlsx.mjs";
 
+import conventions from "./kali-data.mjs";
+
 const dataFolder = "./data";
 
 const parseEntreprise = (workbook) => {
@@ -72,9 +74,14 @@ const parseChiffres = (workbook) => {
 
 const parseRattachement = (workbook) => {
   const data = utils.sheet_to_json(workbook.Sheets["Rattachement"]);
+  const idcc = padIdcc(Object.values(data[0])[0]);
+  const convention = conventions.find(
+    (c) => parseInt(c.num) === parseInt(idcc)
+  );
   return {
-    idcc: padIdcc(Object.values(data[0])[0]),
+    idcc,
     title: Object.values(data[1])[0].trim(),
+    url: convention && convention.url,
   };
 };
 
@@ -211,7 +218,7 @@ const parseSalaires = (workbook) => {
 
 const result = readdirSync(dataFolder)
   .filter((name) => name.match(/^fiche2020_.*\.xlsx/))
-  //.slice(0, 1)
+  //  .slice(0, 1)
   .map((name) => parseFile(`${dataFolder}/${name}`));
 
 console.log(JSON.stringify(result, null, 2));

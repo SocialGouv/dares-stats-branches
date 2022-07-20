@@ -1,5 +1,6 @@
 export interface ConventionCollective {
   idcc: string;
+  url: string;
   title: string;
   entreprises: {
     entreprises: Entreprises;
