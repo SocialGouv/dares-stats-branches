@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
+  basePath: "/dares-stats-branches",
 };
 
 module.exports = nextConfig;

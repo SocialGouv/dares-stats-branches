@@ -92,7 +92,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Stats branches professionnelles DARES</title>
         <meta name="description" content="DARES" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/dares-stats-branches/favicon.ico" />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css"
