@@ -12,8 +12,9 @@ const Filters = () => {
   return <div>Filters</div>;
 };
 
-const formatNum = (num: any) => {
-  return new Intl.NumberFormat().format(parseInt(num * 100) / 100);
+const formatNum = (num: number) => {
+  const strNum = "" + num * 100;
+  return new Intl.NumberFormat().format(parseInt(strNum) / 100);
 };
 
 const views = [
@@ -89,7 +90,7 @@ const Home: NextPage = () => {
         Fork me on GitHub
       </GitHubForkRibbon>
       <Head>
-        <title>Create Next App</title>
+        <title>Stats branches professionnelles DARES</title>
         <meta name="description" content="DARES" />
         <link rel="icon" href="/favicon.ico" />
         <link
