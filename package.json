@@ -1,9 +1,10 @@
 {
-  "name": "dares-data",
+  "name": "dares-stats-branches",
+  "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
   "author": "Julien Bouquillon <julien.bouquillon@sg.social.gouv.fr>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "xlsx": "^0.18.5"
   }
