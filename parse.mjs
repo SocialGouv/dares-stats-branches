@@ -86,6 +86,7 @@ const parseFile = (path) => {
     ...parseRattachement(workbook),
     entreprises: parseEntreprise(workbook),
     chiffres: parseChiffres(workbook),
+    salaires: parseSalaires(workbook),
   };
 
   return result;
@@ -97,8 +98,120 @@ const padIdcc = (idcc) => {
   }
   return idcc;
 };
+
+const parseSalaires = (workbook) => {
+  const data = utils.sheet_to_json(workbook.Sheets["Salaires"]);
+
+  const salaireMoyenKeys = [
+    "Ensemble",
+    "29 ans ou moins",
+    "30-49 ans",
+    "50 ans ou plus",
+    "Hommes",
+    "Femmes",
+    "Cadre",
+    "Profession intermédiaire",
+    "Employé",
+    "Ouvrier",
+    "Entreprise de 1 à 9 salariés",
+    "Entreprise de 10 à 19 salariés",
+    "Entreprise de 20 à 49 salariés",
+    "Entreprise de 50 à 99 salariés",
+    "Entreprise de 100 à 249 salariés",
+    "Entreprise de 250 à 499 salariés",
+    "Entreprise de 500 salariés ou plus",
+  ];
+
+  const ecartHFKeys = [
+    "Ensemble",
+    "Cadre",
+    "Profession intermédiaire",
+    "Employé",
+    "Ouvrier",
+    "29 ans ou moins",
+    "30-49 ans",
+    "50 ans ou plus",
+    "Entreprise de 1 à 9 salariés",
+    "Entreprise de 10 à 19 salariés",
+    "Entreprise de 20 à 49 salariés",
+    "Entreprise de 50 à 99 salariés",
+    "Entreprise de 100 à 249 salariés",
+    "Entreprise de 250 à 499 salariés",
+    "Entreprise de 500 salariés ou plus",
+  ];
+
+  const repartitionSMICKeys = [
+    "Moins de 1,05 Smic",
+    "Entre 1,05 et 1,1 Smic",
+    "Entre 1,1 et 1,2 Smic",
+    "Entre 1,2 et 1,3 Smic",
+    "Entre 1,3 et 1,4 Smic",
+    "Entre 1,4 et 1,5 Smic",
+    "Entre 1,5 et 1,6 Smic",
+    "Entre 1,6 et 2 Smic",
+    "Entre 2 et 3 Smic",
+    "Entre 3 et 4 Smic",
+    "Entre 4 et 5 Smic",
+    "Supérieur à 5 Smic",
+    "Ensemble",
+  ];
+
+  const repartitionSMIC105Keys = [
+    "Ensemble",
+    "29 ans ou moins",
+    "30-49 ans",
+    "50 ans ou plus",
+    "Hommes",
+    "Femmes",
+    "Cadre",
+    "Profession intermédiaire",
+    "Employé",
+    "Ouvrier",
+    "Entreprise de 1 à 9 salariés",
+    "Entreprise de 10 à 19 salariés",
+    "Entreprise de 20 à 49 salariés",
+    "Entreprise de 50 à 99 salariés",
+    "Entreprise de 100 à 249 salariés",
+    "Entreprise de 250 à 499 salariés",
+    "Entreprise de 500 salariés ou plus",
+  ];
+
+  const extractTable = (start, end, keys) =>
+    keys
+      .map((key) => {
+        const row = data.slice(start, end).find((r) => r.Titre === key);
+        return {
+          key,
+          idcc: row["Données sur les salaires de l'IDCC"],
+          cris: row.__EMPTY,
+          ensemble: row.__EMPTY_1,
+        };
+      })
+      .reduce((a, c) => {
+        a[c.key] = {
+          idcc: c.idcc,
+          cris: c.cris,
+          ensemble: c.ensemble,
+        };
+        return a;
+      }, {});
+
+  const salairesMoyens = extractTable(0, 30, salaireMoyenKeys);
+  const ecartsHF = extractTable(25, 44, ecartHFKeys);
+  const repartitionsSMIC = extractTable(43, 57, repartitionSMICKeys);
+  const repartitionSMIC105 = extractTable(57, 80, repartitionSMIC105Keys);
+
+  return {
+    moyen: salairesMoyens,
+    ecartHF: ecartsHF,
+    repartitionSMIC: repartitionsSMIC,
+    repartitionSMIC105: repartitionSMIC105,
+  };
+};
+
 const result = readdirSync(dataFolder)
   .filter((name) => name.match(/^fiche2020_.*\.xlsx/))
+  //.slice(0, 1)
   .map((name) => parseFile(`${dataFolder}/${name}`));
 
 console.log(JSON.stringify(result, null, 2));

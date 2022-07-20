@@ -4,7 +4,7 @@ Extraction JSON des données issues de ["Les portraits statistiques de branches 
 
 ## Executer
 
-Les données originales doivent se trouver dans `./data`
+Les données originales (xslx) doivent se trouver dans `./data`
 
 ```
 yarn
